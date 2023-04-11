@@ -9,20 +9,20 @@ public class Program {
         System.out.print("-> ");
         String input =  sc.nextLine();
         char arr[] = input.toCharArray();
-        int[] unicode = new int[65535];
+        int[] unicode = new int[65536];
 
+        if (input.length() == 0) {
+            System.exit(0);
+            System.out.println("IllegalArgument");
+        }
         String s = "";
         for(int i = 0; i < input.length(); i++)
-        {
             unicode[(int) arr[i]] += 1;
-        }
 
         for (int i = 0; i < unicode.length; i++)
-        {
             if (unicode[i] != 0)
                 s += (char) i;
-        }
-
+        sc.close();
         prova(s, unicode);
     }
 
@@ -34,9 +34,7 @@ public class Program {
 
         int len = 10;
         if (tmp.length < 10)
-        {
             len = tmp.length;
-        }
         char[] lettere = new char[len];
         int[] numeri = new int[len];
         for (int i = 0; i < len ; i++) 
@@ -46,9 +44,7 @@ public class Program {
             {
                 int y = unicode[(int) tmp[j]];
                 if (y > max && y < old_max)
-                {
                    max = y;
-                }
             }
             old_max = max;
     
@@ -57,7 +53,10 @@ public class Program {
                 if (unicode[k] != 0 && unicode[k] == max)
                 {
                     lettere[idx_lett] = (char) k;
-                    numeri[idx_lett++] = unicode[k];
+                    numeri[idx_lett] = unicode[k];
+                    if (numeri[idx_lett] > 999)
+                        numeri[idx_lett] = 999;
+                    idx_lett++;
                 }
             }
         }
@@ -65,15 +64,11 @@ public class Program {
         stampa(lettere, numeri);
     }
 
-
-
     static private void stampa(char[] lettere, int[] nums)
     {
         float divider = 1;
         if (nums[0] > 10)
-        {
             divider = nums[0] / 10.0f;
-        }
         
         int level = 11;
         for (int i = 0; i < level; i++)
@@ -82,15 +77,11 @@ public class Program {
             {
                 int x = (int)(nums[j] / divider);
                 if (x > level - i - 1)
-                {
                     System.out.print(" # ");
-                }
                 if (x == level - i - 1)
                 {
                     if (nums[j] < 10)
-                    {
                         System.out.print(" ");
-                    }
                     System.out.print(nums[j] + " ");
                 }
             }
@@ -98,10 +89,8 @@ public class Program {
         }
 
         for (int i = 0; i < lettere.length; i++)
-        {
             System.out.print(" " + lettere[i] + " ");
-        }
-
+        System.out.println();
     }
 
 
