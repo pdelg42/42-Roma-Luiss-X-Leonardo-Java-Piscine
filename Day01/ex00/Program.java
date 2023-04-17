@@ -29,6 +29,5 @@ public class Program {
 			doTransaction(transaction);
 		else
 			System.out.println("Stai senza una lira!");
-
 	}
 }
