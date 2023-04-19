@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import javax.jws.soap.SOAPBinding.Use;
-
 public class UsersArrayList {
 
 	ArrayList<User> list;
@@ -12,20 +10,19 @@ public class UsersArrayList {
 
 	public void addUser(User user) {
 		if(user.getId() > size_d)
-		{
-			list.ensureCapacity(size_d + (size_d / 2));
-			System.out.println("capocchia");
-		}
+			size_d = size_d + (size_d / 2);
 		list.add(user);
 	}
-	public void getId(int id) {
+
+	public void getUserById(int id) {
 		for(User i: list)
 		{
 			if(id == i.getId())
 				System.out.println(i.getName());
 		}
 	}
-	public void getIndex(int index) {
+
+	public void getUserByIndex(int index) {
 		for (int i = 0; i < list.size(); i++)
 		{
 			if(index == i)
@@ -35,11 +32,12 @@ public class UsersArrayList {
 			}
 		}
 	}
-	public void getszie(int id) {
-		for(User i: list)
-		{
-			if(id == i.getId())
-				System.out.println(i.getName());
-		}
+
+	public int countUsers() {
+		return (list.size());
+	}
+
+	public int getSize() {
+		return (this.size_d);
 	}
 }
