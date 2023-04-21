@@ -18,7 +18,7 @@ public class UsersArrayList {
 		for(User i: list)
 		{
 			if(id == i.getId())
-				System.out.println(i.getName());
+				System.out.println(i);
 		}
 	}
 
@@ -27,7 +27,7 @@ public class UsersArrayList {
 		{
 			if(index == i)
 			{
-				System.out.println(list.get(index).getName());
+				System.out.println(this.list.get(index));
 				break;
 			}
 		}

@@ -36,16 +36,20 @@ public class Transaction {
 	public long getTransId(){
 		return this.identifier;
 	}
+
 	public User getRecipient(){
 		return this.recipient;
 	}
+
 	public User getSender(){
 		return this.sender;
 	}
+
 	public float getTransferAmount()
 	{
 		return this.transferAmount;
 	}
+	
 	public String getTransferCategory()
 	{
 		return this.transferCategory;
