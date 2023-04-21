@@ -18,8 +18,12 @@ public class UsersArrayList {
 		for(User i: list)
 		{
 			if(id == i.getId())
+			{
 				System.out.println(i);
+				return ;
+			}
 		}
+		throw new UserNotFoundException("User not found by id");
 	}
 
 	public void getUserByIndex(int index) {
@@ -28,9 +32,10 @@ public class UsersArrayList {
 			if(index == i)
 			{
 				System.out.println(this.list.get(index));
-				break;
+				return ;
 			}
 		}
+		throw new UserNotFoundException("User not found by index");
 	}
 
 	public int countUsers() {

@@ -32,7 +32,7 @@ public class Program {
 		//list.printList();
 		//System.out.println(list.delTail() + " deleted.");
 		//list.printList();
-		//System.out.println(list.delForId((transaction1.getTransId())) + " deleted.");
+		// System.out.println(list.delForId((transaction6.getTransId())) + " deleted.");
 		//list.printList();
 
 		for (Transaction t : list.toArray())	{

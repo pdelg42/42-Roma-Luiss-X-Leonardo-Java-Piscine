@@ -1,7 +1,7 @@
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class TransactionLinkedList {
+public class TransactionLinkedList{
 	
 	private	Node head;
 	private	Node tail;
@@ -92,15 +92,9 @@ public class TransactionLinkedList {
 
 	public Transaction delForId(String id) {
 		Node 	temp = head;
-		// String 	str;
-		// Long	n;
 		int		index = 0;
 
-		
 		while (temp.next != null) {
-			// n = temp.transaction.getTransId();
-			// str = Long.toString(n);
-			//System.out.println("str: " + str);
 			if (temp.transaction.getTransId().compareTo(id) == 0) {
 				return (delAtIndex(index));
 			}
@@ -112,7 +106,7 @@ public class TransactionLinkedList {
 				return (delTail());
 			}
 		}
-		return (null);
+		throw new TransactionNotFoundException("Transaction not found by index");
 	}
 
 	public Transaction delHead() {
