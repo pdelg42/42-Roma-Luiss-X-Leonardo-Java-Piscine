@@ -15,12 +15,6 @@ public class Program {
 		Transaction transaction5 = new Transaction(recipient, sender, 499.94f);
 		Transaction transaction6 = new Transaction(recipient, sender, 499.93f);
 
-		// if (transaction.preTransaction(transaction))
-		// 	transaction.doTransaction(transaction);
-		// else
-		// 	System.out.println("Stai senza una lira!");
-
-
 		list.addInHead(transaction3);
 		list.addInHead(transaction2);
 		list.addInHead(transaction1);
