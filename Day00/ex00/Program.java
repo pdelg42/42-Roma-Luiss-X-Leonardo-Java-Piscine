@@ -5,10 +5,19 @@ public class Program {
         int sum;
 
         sum = 0;
-        do {
-            sum = sum + numb % 10;
-            numb = numb / 10;
-            } while (numb > 0);
+
+        sum = sum + numb % 10;
+        numb = numb / 10;
+        sum = sum + numb % 10;
+        numb = numb / 10;
+        sum = sum + numb % 10;
+        numb = numb / 10;
+        sum = sum + numb % 10;
+        numb = numb / 10;
+        sum = sum + numb % 10;
+        numb = numb / 10;
+        sum = sum + numb % 10;
+    
         return (sum);
     }
 
