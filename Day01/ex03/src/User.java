@@ -3,15 +3,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class User {
-    private int     _identifier;
-    private String  _name;
-    private int     _balance;
+    private int             _identifier;
+    private String          _name;
+    private int             _balance;
+    private TransactionList _transactionList;
 
     public User(String name, int balance) {
         if (this.nameConvalidation(name) && (balance > -1 && balance <= Integer.MAX_VALUE) && name.length() < 30) {
             this._identifier = UserIdsGenerator.getId().generateId();
             this._name = name;
             this._balance = balance;
+            this._transactionList = new TransactionList();
         } else {
             System.out.println("Fail to create user: input error.");
         }
@@ -42,5 +44,9 @@ public class User {
 
     public int lessBalance(int amount) {
         return this._balance -= amount;
+    }
+
+    public TransactionList getTransactionList() {
+        return this._transactionList;
     }
 }

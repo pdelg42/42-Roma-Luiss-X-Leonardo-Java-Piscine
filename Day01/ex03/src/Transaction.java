@@ -18,6 +18,8 @@ public class Transaction {
         this._amount = transferAmount;
         sender.lessBalance(transferAmount);
         recipient.addBalance(transferAmount);
+        sender.getTransactionList().addTransaction(this);
+        recipient.getTransactionList().addTransaction(this);
     }
     
     public Transaction(User sender, User recipient, int transferAmount, Category category) {

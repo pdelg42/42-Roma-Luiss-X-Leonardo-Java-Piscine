@@ -53,7 +53,7 @@ public class Program {
         Transaction debts0 = new Transaction(dario, luis, 100, Transaction.Category.valueOf("DEBTS"));
         Transaction credits0 = new Transaction(andrea, africa, 100, Transaction.Category.valueOf("CREDITS"));
         Transaction debts1 = new Transaction(africa, andrea, 100, Transaction.Category.valueOf("DEBTS"));
-        Transaction credits1 = new Transaction(luis, clefari, 100, Transaction.Category.valueOf("CREDITS"));
+        Transaction credits1 = new Transaction(luis, dario, 100, Transaction.Category.valueOf("CREDITS"));
         Transaction debts2 = new Transaction(dario, marco, 100, Transaction.Category.valueOf("DEBTS"));
 
         transactionList.addTransaction(debts);
@@ -104,5 +104,7 @@ public class Program {
             System.out.println(t);
         }
         
+        System.out.println("User list transaction: " + dario.getName());
+        dario.getTransactionList().printList();
     }
 }

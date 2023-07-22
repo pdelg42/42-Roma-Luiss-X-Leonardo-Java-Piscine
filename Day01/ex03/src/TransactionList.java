@@ -15,9 +15,11 @@ class Node {
 public class TransactionList implements TransactionListInterface {
 	
 	private Node _head;
+	private Node _tail;
 
 	public TransactionList() {
 		this._head = null;
+		this._tail = null;
 	}
 
 	@Override
@@ -25,15 +27,16 @@ public class TransactionList implements TransactionListInterface {
 		Node temp = new Node(transaction);
 
 		if (_head == null) {
-			_head = temp;
+			_head = temp; 
+		} else if (_tail == null) {
+			_tail = temp;
+			_head.next = _tail;
+			_tail.prev = _head;
 		} else {
-			Node ptr = _head;
-			while(ptr.next != null) {
-				ptr = ptr.next;
-			}
-			ptr.next = temp;
-			temp.prev = ptr;
+			_tail.next = temp;
+			temp.prev = _tail;
 			temp.next = null;
+			_tail = temp;
 		}
 	}
 
