@@ -1,37 +1,46 @@
 public class Program {
+
     public static void main(String[] args) {
-        int count;
-
-        if (args.length != 1 || !args[0].startsWith("--count=")) {
-            System.out.println("Specify a count argument using '--count='");
-            System.exit(-1);
-        }
-        count = Integer.parseInt(args[0].substring(8));
-        Thread egg = new Thread(new Egg(count));
-        Thread hen = new Thread(new Hen(count));
-
-        try {
-    
-            if (count <= 0) {
-                System.out.println("Incorrect count: " + count);
-                System.exit(-1);
+        int count = 50;
+        if (args.length > 0 && args[0].startsWith("--count=")) {
+            String countArg = args[0].substring(8);
+            try {
+                count = Integer.parseInt(countArg);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-            egg.start();
-            hen.start();
         }
-        catch (NumberFormatException e) {
-            System.out.print("Illegal count argument: ");
-            System.out.println(e.getMessage());
-        }
+
+        Thread eggThread = new Thread(new AnswerProvider("Egg", count));
+        Thread henThread = new Thread(new AnswerProvider("Hen", count));
+
+        eggThread.start();
+        henThread.start();
+
         try {
-            egg.join();
-            hen.join();
+            eggThread.join();
+            henThread.join();
         } catch (InterruptedException e) {
-            System.err.println("error");
-            return;
+            e.printStackTrace();
         }
-        for (int i = 0; i < count; i++) {
+
+        for (int i = 1; i <= count; i++) {
             System.out.println("Human");
+        }
+    }
+
+    private static class AnswerProvider implements Runnable {
+        private final String answer;
+        private final int count;
+
+        public AnswerProvider(String answer, int count) {
+            this.answer = answer;
+            this.count = count;
+        }
+
+        public void run() {
+            for (int i = 1; i <= count; i++)
+                System.out.println(answer);
         }
     }
 }

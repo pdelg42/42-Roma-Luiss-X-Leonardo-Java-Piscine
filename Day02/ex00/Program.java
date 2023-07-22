@@ -61,7 +61,8 @@ public class Program {
                 return(key);
             }
         }
-        return(null);
+        // System.out.println("\n Type not present in signatures.txt \n");
+        return("ASCII text or Type not present in signatures.txt");
     }
 
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
