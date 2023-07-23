@@ -1,0 +1,121 @@
+import java.util.UUID;
+
+class Node {
+	Transaction _transaction;
+	Node next;
+	Node prev;
+
+	public Node(Transaction transaction) {
+		this._transaction = transaction;
+		this.prev = null;
+		this.next = null;
+	}
+}
+
+public class TransactionList implements TransactionListInterface {
+
+	private Node _head;
+	private Node _tail;
+
+	public TransactionList() {
+		this._head = null;
+		this._tail = null;
+	}
+
+	@Override
+	public void addTransaction(Transaction transaction) {
+		Node temp = new Node(transaction);
+
+		if (_head == null) {
+			_head = temp;
+		} else if (_tail == null) {
+			_tail = temp;
+			_head.next = _tail;
+			_tail.prev = _head;
+		} else {
+			_tail.next = temp;
+			temp.prev = _tail;
+			temp.next = null;
+			_tail = temp;
+		}
+	}
+
+	@Override
+	public void removeTransactionbyID(String identifier) throws TransactionNotFoundException {
+		Node ptr = _head;
+
+		if (_head._transaction.getIdentifier().toString().equals(identifier)) {
+			System.out.println("HERE " + identifier);
+			ptr = _head.next;
+			_head.next = null;
+			if (ptr != null) {
+				ptr.prev = null;
+			}
+			_head = ptr;
+			System.out.println(identifier + ": Transaction deleted.\n");
+			return;
+		} else {
+			while (ptr != null) {
+				if (ptr._transaction.getIdentifier().toString().equals(identifier)) {
+					if (ptr.next == null) {
+						ptr.prev.next = null;
+						System.out.println(identifier + ": Transaction deleted.\n");
+						return;
+					} else {
+						ptr.prev.next = ptr.next;
+						ptr.next.prev = ptr.prev;
+						System.out.println(identifier + ": Transaction deleted.\n");
+						return;
+					}
+				}
+				ptr = ptr.next;
+			}
+			throw new TransactionNotFoundException("Transaction not in archive.");
+		}
+	}
+
+	public void printList() {
+		Node ptr = this._head;
+
+		if (this._head != null) {
+			while (ptr != null) {
+				System.out.println(ptr._transaction.getIdentifier());
+				ptr = ptr.next;
+			}
+		}
+	}
+
+	public int lenList() {
+		Node ptr = this._head;
+		int i = 0;
+
+		if (this._head != null) {
+			while (ptr != null) {
+				i++;
+				ptr = ptr.next;
+			}
+			return i;
+		}
+		return i;
+	}
+
+	@Override
+	public Transaction[] toArray() {
+		Transaction[] arrayTransactionList = new Transaction[this.lenList()];
+		Node ptr = this._head;
+		int i = 0;
+
+		if (this._head != null) {
+			while (ptr != null) {
+				arrayTransactionList[i] = ptr._transaction;
+				ptr = ptr.next;
+				i++;
+			}
+		}
+		return arrayTransactionList;
+	}
+
+	public Node getHead() {
+		return this._head;
+	}
+}
