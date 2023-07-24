@@ -1,5 +1,7 @@
 import java.util.UUID;
 
+import javafx.beans.binding.StringExpression;
+
 public class TransactionService {
 
 	private Service _service;
@@ -12,17 +14,18 @@ public class TransactionService {
 		return this._service;
 	}
 
-
 }
 
 class Service {
 
 	private UserArrayList _userList;
 	private TransactionList _transactionList;
+	private String[] _unpaired;
 
 	public Service() {
 		_userList = new UserArrayList();
 		_transactionList = new TransactionList();
+		_unpaired = new String[10];
 	}
 
 	public void addUser(String name, int balance) {
@@ -63,9 +66,13 @@ class Service {
 		try {
 			User sender = _userList.userById(senderID);
 			User recipient = _userList.userById(recipientID);
-			if (sender != null && recipient != null) {
+			try {
 				Transaction temp = new Transaction(sender, recipient, transferAmount);
-				_transactionList.addTransaction(temp);
+				_transactionList.addTransaction(sender.getTransactionList().getLastTransacation().getTransaction());
+				_transactionList.addTransaction(recipient.getTransactionList().getLastTransacation().getTransaction());
+				temp = null;
+			} catch (IllegalTransactionException e) {
+				System.out.println(e.getMessage());
 			}
 		} catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -77,6 +84,7 @@ class Service {
 		for (User u : _userList._usersArray) {
 			if (u.getIdentifier() == userID) {
 				try {
+					_transactionList.removeTransactionbyID(transactionID);
 					u.getTransactionList().removeTransactionbyID(transactionID);
 					Transaction[] temp = userTransactionList(userID);
 					return temp;
@@ -104,7 +112,24 @@ class Service {
 			printTransaction(_userList._usersArray[i].getTransactionList().toArray());
 		}
 	}
+
 	public boolean unpaired() {
+
+		Node ptr = _transactionList.getHead();
+		int i = -1;
+
+		while (ptr != null) {
+			if (ptr.next != null && ptr._transaction.getIdentifier().toString()
+					.equals(ptr.next._transaction.getIdentifier().toString())) {
+				ptr = ptr.next;
+			} else {
+				while (_unpaired[++i] != null) {
+				}
+				;
+				_unpaired[i] = ptr._transaction.getIdentifier().toString();
+			}
+			ptr = ptr.next;
+		}
 		return false;
 	}
 }

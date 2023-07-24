@@ -1,16 +1,17 @@
 import java.util.UUID;
 
 public class Transaction {
-    private UUID    _identifier;
-    private String  _sender;
-    private String  _recipient;
+    private UUID _identifier;
+    private String _sender;
+    private String _recipient;
     private Category _category;
-    private int     _amount;
+    private int _amount;
+
     public enum Category {
         DEBTS, CREDITS
     }
 
-    public  Transaction() {
+    public Transaction() {
         this._identifier = null;
         this._sender = null;
         this._recipient = null;
@@ -35,14 +36,14 @@ public class Transaction {
         recipient.getTransactionList().addTransaction(temp.setCategory("CREDITS"));
     }
 
-    public Transaction(User sender, User recipient, int transferAmount) {
+    public Transaction(User sender, User recipient, int transferAmount) throws IllegalTransactionException {
         if (sender != null && recipient != null && sender.getBalance() > 0
                 && transferAmount > 0 && transferAmount <= sender.getBalance()
                 && !sender.equals(recipient)) {
-                this.setParameters(sender, recipient, transferAmount);
-        } else {
-            System.out.println("Transaction not available.");
+            this.setParameters(sender, recipient, transferAmount);
+            return;
         }
+        throw new IllegalTransactionException("Illegal Transaction");
     }
 
     private Transaction setCategory(String category) {
