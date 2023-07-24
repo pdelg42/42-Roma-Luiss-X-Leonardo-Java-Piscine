@@ -10,6 +10,10 @@ class Node {
 		this.prev = null;
 		this.next = null;
 	}
+
+	public Transaction getTransaction() {
+		return this._transaction;
+	}
 }
 
 public class TransactionList implements TransactionListInterface {
@@ -45,26 +49,27 @@ public class TransactionList implements TransactionListInterface {
 		Node ptr = _head;
 
 		if (_head._transaction.getIdentifier().toString().equals(identifier)) {
-			System.out.println("HERE " + identifier);
+			//System.out.println("HERE " + identifier);
 			ptr = _head.next;
 			_head.next = null;
 			if (ptr != null) {
 				ptr.prev = null;
 			}
 			_head = ptr;
-			System.out.println(identifier + ": Transaction deleted.\n");
+			// System.out.println(identifier + ": Transaction deleted.\n");
 			return;
 		} else {
 			while (ptr != null) {
 				if (ptr._transaction.getIdentifier().toString().equals(identifier)) {
 					if (ptr.next == null) {
 						ptr.prev.next = null;
-						System.out.println(identifier + ": Transaction deleted.\n");
+						_tail = ptr;
+						// System.out.println(identifier + ": Transaction deleted.\n");
 						return;
 					} else {
 						ptr.prev.next = ptr.next;
 						ptr.next.prev = ptr.prev;
-						System.out.println(identifier + ": Transaction deleted.\n");
+						// System.out.println(identifier + ": Transaction deleted.\n");
 						return;
 					}
 				}
@@ -117,5 +122,16 @@ public class TransactionList implements TransactionListInterface {
 
 	public Node getHead() {
 		return this._head;
+	}
+
+	public Node getTail() {
+		return this._tail;
+	}
+
+	public Node getLastTransacation() {
+		if (this._tail == null) {
+			return this.getHead();
+		}
+		return this.getTail();
 	}
 }

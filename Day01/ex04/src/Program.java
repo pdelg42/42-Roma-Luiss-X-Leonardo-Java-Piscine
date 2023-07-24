@@ -10,9 +10,9 @@ public class Program {
         transactionService.getService().addUser("Kokoroko", 200);
         transactionService.getService().addUser("Npsolus", 200);
 
-        transactionService.getService().doTransaction(0, 1, 5000);
-        transactionService.getService().doTransaction(1, 2, 100);
-        transactionService.getService().doTransaction(2, 0, 80);
+        transactionService.getService().doTransaction(0, 1, 50);
+        transactionService.getService().doTransaction(1, 2, 50);
+        transactionService.getService().doTransaction(2, 1, 50);
 
         // transactionService.getService().unpaired();
         transactionService.getService().print();

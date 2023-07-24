@@ -130,6 +130,11 @@ class Service {
 			}
 			ptr = ptr.next;
 		}
+
+		int k = -1;
+		while(_unpaired[++k] != null) {
+			System.out.println("here" + _unpaired[k]);
+		}
 		return false;
 	}
 }
