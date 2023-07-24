@@ -5,7 +5,7 @@ public class Program {
     public static void main(String[] args) {
 
         TransactionService transactionService = new TransactionService();
-
+    
         transactionService.getService().addUser("Andrea", 200);
         transactionService.getService().addUser("Kokoroko", 200);
         transactionService.getService().addUser("Npsolus", 200);

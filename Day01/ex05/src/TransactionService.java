@@ -11,8 +11,6 @@ public class TransactionService {
 	public Service getService() {
 		return this._service;
 	}
-
-
 }
 
 class Service {
@@ -104,6 +102,23 @@ class Service {
 			printTransaction(_userList._usersArray[i].getTransactionList().toArray());
 		}
 	}
+
+	void getUser(int id) {
+		int i = -1;
+		while (_userList._usersArray[++i] != null) {
+			if(id ==  _userList._usersArray[i].getIdentifier())
+				System.out.println( " Balance:" + _userList._usersArray[i].getBalance() + " Name:" + _userList._usersArray[i].getName());
+		}
+    }
+
+	void getTransactionUser(int id) {
+		int i = -1;
+		while (_userList._usersArray[++i] != null) {
+			if(id ==  _userList._usersArray[i].getIdentifier())
+				printTransaction(_userList._usersArray[i].getTransactionList().toArray());
+		}
+	}
+
 	public boolean unpaired() {
 		return false;
 	}
