@@ -1,99 +1,94 @@
-import java.util.Random;
-
-class SumThread extends Thread {
-    private int[] array;
-    private int startIndex;
-    private int endIndex;
-    private int sum;
-
-    public SumThread(int[] array, int startIndex, int endIndex) {
-        this.array = array;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
-    }
-
-    public int getSum() {
-        return sum;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public int getEndIndex() {
-        return endIndex;
-    }
-
-    @Override
-    public void run() {
-        for (int i = startIndex; i <= endIndex; i++) {
-            sum += array[i];
-        }
-    }
-}
+import java.util.*;
 
 public class Program {
-    public static void main(String[] args) {
-        int arraySize = 0;
-        int threadsCount = 0;
+	private static PrinterObject pObj = PrinterObject.getInst();
+	private static int arraySize = 0;
+	private static int threads = 0;
+	private static int[] arr;
+	
+	public static void main(String[] args) {
+		Random rObj = new Random();
 
-        // Parsing command-line arguments
-        if (args.length == 2) {
-            try {
-                arraySize = Integer.parseInt(args[0]);
-                threadsCount = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid command-line arguments. Please provide valid integers.");
-                System.exit(1);
-            }
-        } else {
-            System.err.println("Invalid command-line arguments. Please provide arraySize and threadsCount.");
-            System.exit(1);
-        }
+		if (args.length != 2) {
+			pObj.printError("Usage: java Progam --arraySize={value} --threadsCount={value}");
+			return ;
+		}
 
-        // Generate the random array
-        int[] array = new int[arraySize];
-        Random random = new Random();
-        for (int i = 0; i < arraySize; i++) {
-            array[i] = random.nextInt(1001); // Random integer between 0 and 1000
-        }
+		if (!parseArgs(args)) {
+			pObj.printError("Invalid parameters");
+			return ;
+		}
 
-        // Calculate the sum using the standard method
-        int sum = 0;
-        for (int num : array) {
-            sum += num;
-        }
-        System.out.println("Sum: " + sum);
+		arr = new int[arraySize + 1];
+		for (int i = 0; i < arraySize; i++) {
+			arr[i] = rObj.nextInt(1000);
+		}
 
-        // Create and start summing threads
-        int sectionSize = arraySize / threadsCount;
-        int lastSectionSize = sectionSize + arraySize % threadsCount;
-        SumThread[] threads = new SumThread[threadsCount];
-        int startIndex = 0;
+		int stdSum = 0;
+		for (int a: arr) {
+			stdSum += a;
+		}
+		pObj.print("Sum: " + stdSum);
 
-        for (int i = 0; i < threadsCount - 1; i++) {
-            threads[i] = new SumThread(array, startIndex, startIndex + sectionSize - 1);
-            threads[i].start();
-            startIndex += sectionSize;
-        }
-        threads[threadsCount - 1] = new SumThread(array, startIndex, startIndex + lastSectionSize - 1);
-        threads[threadsCount - 1].start();
+		int startArrPos = 0;
+		int finalArrPos = 0;
+		Thread[] tasks = new Thread[threads];
+		for (int i = 1; i <= threads; i++) {
+			finalArrPos = arraySize * i / threads;
+			Thread task = new Thread(new AdderClass(i, startArrPos, finalArrPos, arr));
+			startArrPos = finalArrPos + 1;
+			tasks[i - 1] = task;
+			task.start();
+		}
+		
+		int stillRunning = 1;
+		while (stillRunning > 0) {
+			stillRunning = 0;
+			for (Thread t: tasks) {
+				if (t.isAlive()) {
+					stillRunning += 1;
+				}
+			}
+		};
 
-        // Wait for all threads to finish
-        try {
-            for (int i = 0; i < threadsCount; i++) {
-                threads[i].join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		pObj.print("Sum by threads: " + AdderClass.getTotalSum());	
+	}
 
-        // Calculate the sum of sections by threads
-        int sumByThreads = 0;
-        for (int i = 0; i < threadsCount; i++) {
-            sumByThreads += threads[i].getSum();
-            System.out.println("Thread " + (i + 1) + ": from " + threads[i].getStartIndex() + " to " + threads[i].getEndIndex() + " sum is " + threads[i].getSum());
-        }
-        System.out.println("Sum by threads: " + sumByThreads);
-    }
+	private static boolean parseArgs(String[] args) {
+		if (!args[0].matches("--arraySize=\\d+")) {
+			pObj.printError("flag '--arraySize={value}' not matching");
+			return false;
+		}
+
+		arraySize = parseIntVal(args[0], 12);
+		if (arraySize == 0 || arraySize > 2 * 10e6) {
+			pObj.printError("values accepted: 0 < value <= 2000000");
+			return false;
+		}
+		
+		if (!args[1].matches("--threadsCount=\\d+")) {
+			pObj.printError("flag '--threadsCount={value}' not matching");
+			return false;
+		}
+
+		threads = parseIntVal(args[1], 15);
+		if (threads == 0 || threads > arraySize) {
+			pObj.printError("values accepted: 0 < value <= arraySize");
+			return false;
+		}
+		return true;
+	}
+
+	private static int parseIntVal(String param, int from) {
+		int parsed = 0;
+
+		try {
+			parsed = Integer.parseInt(param.substring(from));
+		} catch (NumberFormatException e) {
+			pObj.printError("Parse error: value out of bounds");
+			return 0;
+		}
+
+		return parsed;
+	}
 }

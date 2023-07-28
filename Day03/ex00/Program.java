@@ -1,46 +1,54 @@
+import java.io.*;
+
 public class Program {
+	public static void main(String args[]) {
+		if (args.length != 1) {
+			printError("Usage: java Progam --count=[value greater than 0]");
+			return ;
+		}
 
-    public static void main(String[] args) {
-        int count = 50;
-        if (args.length > 0 && args[0].startsWith("--count=")) {
-            String countArg = args[0].substring(8);
-            try {
-                count = Integer.parseInt(countArg);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+		int count = parseCount(args[0]);
 
-        Thread eggThread = new Thread(new AnswerProvider("Egg", count));
-        Thread henThread = new Thread(new AnswerProvider("Hen", count));
+		if (count <= 0) {
+			printError("Invalid parameter");
+			return ;
+		}
 
-        eggThread.start();
-        henThread.start();
+		Thread t1 = new Thread(new TheGreatestProblem(count, "Egg"));
+		Thread t2 = new Thread(new TheGreatestProblem(count, "Hen"));
+		t1.start();
+		t2.start();
 
-        try {
-            eggThread.join();
-            henThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		while (t1.isAlive() || t2.isAlive());
 
-        for (int i = 1; i <= count; i++) {
-            System.out.println("Human");
-        }
-    }
+		for (int i = 0; i < count; i++) {
+			print("Human");
+		}
+	}
 
-    private static class AnswerProvider implements Runnable {
-        private final String answer;
-        private final int count;
+	private static void printError(String msg) {
+		System.err.println("\033[0;31m" + msg + "\033[0m");
+	}
 
-        public AnswerProvider(String answer, int count) {
-            this.answer = answer;
-            this.count = count;
-        }
+	private static void print(String msg) {
+		System.out.println(msg);
+	}
 
-        public void run() {
-            for (int i = 1; i <= count; i++)
-                System.out.println(answer);
-        }
-    }
+	private static int parseCount(String param) {
+		if (!param.matches("--count=\\d+")) {
+			printError("Parse error: use --count=[value greater than 0]");
+			return 0;
+		}
+
+		int parsed = 0;
+
+		try {
+			parsed = Integer.parseInt(param.substring(8));
+		} catch (NumberFormatException e) {
+			printError("Parse error: value out of bounds");
+			return 0;
+		}
+
+		return parsed;
+	}
 }

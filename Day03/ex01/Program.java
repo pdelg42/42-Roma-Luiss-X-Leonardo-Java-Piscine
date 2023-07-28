@@ -1,58 +1,53 @@
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.io.*;
+import java.util.concurrent.*;
 
 public class Program {
 
-    private static final BlockingQueue<String> queue = new ArrayBlockingQueue<>(1);
 
-    public static void main(String[] args) {
-        int count = 50;
-        if (args.length > 0 && args[0].startsWith("--count=")) {
-            String countArg = args[0].substring(8);
-            try {
-                count = Integer.parseInt(countArg);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+	public static void main(String args[]) {
+		PrinterObject pObj = PrinterObject.getInst();
+		BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
-        Thread eggThread = new Thread(new AnswerProvider("Egg", count));
-        Thread henThread = new Thread(new AnswerProvider("Hen", count));
+		if (args.length != 1) {
+			pObj.printError("Usage: java Progam --count=[value greater than 0]");
+			return ;
+		}
+		
+		int count = parseCount(args[0]);
+		
+		if (count <= 0) {
+			pObj.printError("Invalid parameter");
+			return ;
+		}
 
-        eggThread.start();
-        henThread.start();
+		Producer prod = new Producer(queue, count);
+		Consumer cons = new Consumer(queue, count);
 
-        try {
-            for (int i = 1; i <= count * 2; i++) {
-                String response = queue.take();
-                Thread.sleep(100);
-                System.out.println(response);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+		Thread t1 = new Thread(prod);
+		Thread t2 = new Thread(cons);
+		t1.start();
+		t2.start();
 
-    private static class AnswerProvider implements Runnable {
-        private final String answer;
-        private final int count;
+		
+	}
 
-        public AnswerProvider(String answer, int count) {
-            this.answer = answer;
-            this.count = count;
-        }
+	private static int parseCount(String param) {
+		PrinterObject pObj = PrinterObject.getInst();
 
-        @Override
-        public void run() {
-            try {
-                for (int i = 1; i <= count; i++) {
-                    Thread.sleep(100);
-                    queue.put(answer);
+		if (!param.matches("--count=\\d+")) {
+			pObj.printError("Parse error: use --count=[value greater than 0]");
+			return 0;
+		}
 
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		int parsed = 0;
+
+		try {
+			parsed = Integer.parseInt(param.substring(8));
+		} catch (NumberFormatException e) {
+			pObj.printError("Parse error: value out of bounds");
+			return 0;
+		}
+
+		return parsed;
+	}
 }
