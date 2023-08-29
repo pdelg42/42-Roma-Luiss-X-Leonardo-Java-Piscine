@@ -1,0 +1,2 @@
+Main-Class: edu.school42.printer.app.Program
+Class-Path: ../lib/JColor-5.0.0.jar ../lib/jcommander-1.82.jar
